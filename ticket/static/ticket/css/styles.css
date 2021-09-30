@@ -1,0 +1,10 @@
+body {
+    background-color: #F9F9F9 !important;
+    height: 100vh;
+}
+
+.main-bloc {
+    border: 0;
+    border-radius: 25px;
+}
+
