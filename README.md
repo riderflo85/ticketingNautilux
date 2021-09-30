@@ -25,7 +25,7 @@ Ajouter un fichier *.env* à la racine du projet
 $ touch .env
 ```
 
-Ajouter des variables d'environnement dans le fichier:
+Dans le fichier **.env**, ajouter les variables d'environnement:
 - SECRET_KEY
 - DJANGO_SETTINGS_MODULE
 
@@ -36,5 +36,6 @@ $ python3 new_secret_key.py
 ```
 
 Si vous êtes en environnement de développement, la variable d'environnement *DJANGO_SETTINGS_MODULE* sera égale à **ticketNautProject.settings.development**.
+
 Si vous êtes en environnement de production, la variable d'environnement *DJANGO_SETTINGS_MODULE* sera égale à **ticketNautProject.settings.production** et vous devez configurer le fichier *ticketNautProject/settings/production.py* afin de renseigner votre configuration (nom de domaine, système de base de données et configuration pour les fichiers static et media).
 
