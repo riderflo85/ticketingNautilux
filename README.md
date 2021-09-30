@@ -1,6 +1,6 @@
 # Ticket Nautilux
-## Interface de suivie d'intervention par tiquet.
-### Projet réalisé le 30/09/2021 par GRENAILLE Florent.
+### Interface de suivie d'intervention par tiquet.
+Projet réalisé le 30/09/2021 par GRENAILLE Florent.
 
 # Dépendances:
 - pipenv
