@@ -8,3 +8,9 @@ body {
     border-radius: 25px;
 }
 
+.btn-add-inter {
+    float: right;
+    margin-top: 1.2vh;
+    margin-bottom: 1vh;
+    margin-right: 0.3vw;
+}

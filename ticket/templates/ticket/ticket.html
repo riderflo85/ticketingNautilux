@@ -68,6 +68,45 @@
         </tr>
     </tbody>
 </table>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Ajouter une intervention</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action=".">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="labelData" class="form-label">Libellé</label>
+                        <input class="form-control" type="text" id="labelData" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descData" class="form-label">Description</label>
+                        <textarea class="form-control" id="descData" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="operatorNameData" class="form-label">Nom de l'intervenant</label>
+                        <input class="form-control" type="text" id="operatorNameData" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="placeData" class="form-label">Lieu</label>
+                        <input class="form-control" type="text" id="placeData" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateData" class="form-label">Date prévu</label>
+                        <input class="form-control" type="date" id="dateData" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 
