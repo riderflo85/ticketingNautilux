@@ -1,4 +1,5 @@
 {% extends 'ticket/base.html' %}
+{% load static %}
 
 {% block content %}
 <table class="table table-striped table-hover">
@@ -69,40 +70,46 @@
     </tbody>
 </table>
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" ng-controller="FormCtrl">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Ajouter une intervention</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
+                <span class="badge rounded-pill bg-secondary ms-2" ng-class="newInterv.status.cssStyle">{{newInterv.status.type}}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="newInterv = {status: {type: 'Brouillon', cssStyle: 'bg-secondary'}}"></button>
+                {% endverbatim %}
             </div>
-            <form action=".">
+            <form name="form" ng-submit="sendInter(form)" novalidate>
+                {% csrf_token %}
+                {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="labelData" class="form-label">Libellé</label>
-                        <input class="form-control" type="text" id="labelData" required>
+                        <input class="form-control" type="text" id="labelData" ng-model="newInterv.label" required>
                     </div>
                     <div class="mb-3">
                         <label for="descData" class="form-label">Description</label>
-                        <textarea class="form-control" id="descData" required></textarea>
+                        <textarea class="form-control" id="descData" ng-model="newInterv.desc" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="operatorNameData" class="form-label">Nom de l'intervenant</label>
-                        <input class="form-control" type="text" id="operatorNameData" required>
+                        <input class="form-control" type="text" id="operatorNameData" ng-model="newInterv.userInter" required>
                     </div>
                     <div class="mb-3">
                         <label for="placeData" class="form-label">Lieu</label>
-                        <input class="form-control" type="text" id="placeData" required>
+                        <input class="form-control" type="text" id="placeData" ng-model="newInterv.place" required>
                     </div>
                     <div class="mb-3">
                         <label for="dateData" class="form-label">Date prévu</label>
-                        <input class="form-control" type="date" id="dateData" required>
+                        <input class="form-control" type="date" id="dateData" ng-model="newInterv.dateInter" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Valider</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ng-click="newInterv = {status: 'Brouillon'}">Annuler</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Valider</button>
                 </div>
+                {% endverbatim %}
             </form>
         </div>
     </div>
@@ -110,4 +117,6 @@
 {% endblock content %}
 
 
-{% block script %}{% endblock script %}
+{% block script %}
+<script src="{% static 'ticket/js/controller.js' %}"></script>
+{% endblock script %}

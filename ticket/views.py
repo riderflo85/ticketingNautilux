@@ -18,3 +18,15 @@ class ListingInterventionView(ListView):
         context = super().get_context_data(**kwargs)
         
         return context
+
+
+class AddInterventionView(View):
+    """
+    Added one intervention in the database.
+    """
+
+    def post(self, request):
+        print(request.POST)
+        print(request.body)
+
+        return JsonResponse({'done': 'ok'})
