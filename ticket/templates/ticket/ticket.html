@@ -2,6 +2,11 @@
 {% load static %}
 
 {% block content %}
+{% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
+<div ng-controller="GetInters">
+    <p ng-model="inters">{{inters}}</p>
+</div>
+{% endverbatim %}
 <table class="table table-striped table-hover">
     <thead>
         <tr>

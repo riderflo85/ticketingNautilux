@@ -1,23 +1,22 @@
 import json
+from datetime import datetime
 
-from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.generic.base import TemplateView ,View
-from django.views.generic import ListView
+from django.views.generic.base import View, TemplateView
 
 from .models import Intervention
+from .serializer import get_all_interventions_serializer
 
 
-class ListingInterventionView(ListView):
-
-    model = Intervention
-    queryset = Intervention.objects.all().order_by('create_at')
+class ListingInterventionsView(TemplateView):
     template_name = "ticket/ticket.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        return context
+
+class GetAllInterventionsView(View):
+
+    def get(self, request):
+        all_inter = get_all_interventions_serializer()
+        return JsonResponse({'inters': all_inter})
 
 
 class AddInterventionView(View):
@@ -26,7 +25,23 @@ class AddInterventionView(View):
     """
 
     def post(self, request):
-        print(request.POST)
-        print(request.body)
+        try:
+            data = json.loads(request.body)
+            splited_date_inter = data['dateInter'].split('-')
+            new_inter = Intervention()
+            new_inter.label = data['label']
+            new_inter.description = data['desc']
+            new_inter.agent_name = data['userInter']
+            new_inter.city = data['place']
+            new_inter.status = data['status']
+            new_inter.date = datetime(
+                year=int(splited_date_inter[0]),
+                month=int(splited_date_inter[1]),
+                day=int(splited_date_inter[2])
+            ).date()
+            new_inter.save()
 
-        return JsonResponse({'done': 'ok'})
+            return JsonResponse({'status': 'ok'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'error': str(e)})
+
