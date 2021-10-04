@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+from pytz import timezone
+
 from django.http import JsonResponse
 from django.views.generic.base import View, TemplateView
 
@@ -27,6 +29,7 @@ class AddInterventionView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            tz = timezone(data['tz'])
             splited_date_inter = data['dateInter'].split('-')
             new_inter = Intervention()
             new_inter.label = data['label']
@@ -37,8 +40,10 @@ class AddInterventionView(View):
             new_inter.date = datetime(
                 year=int(splited_date_inter[0]),
                 month=int(splited_date_inter[1]),
-                day=int(splited_date_inter[2])
+                day=int(splited_date_inter[2]),
+                tzinfo=tz
             ).date()
+            new_inter.create_at = datetime.now(tz=tz)
             new_inter.save()
 
             return JsonResponse({'status': 'ok'})

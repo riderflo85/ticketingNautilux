@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Intervention(models.Model):
@@ -25,7 +26,7 @@ class Intervention(models.Model):
         verbose_name="lieu de l'intervention"
     )
     create_at = models.DateTimeField(
-        auto_now_add=True,
+        default=timezone.now,
         verbose_name="intervention créée le"
     )
     date = models.DateField(
