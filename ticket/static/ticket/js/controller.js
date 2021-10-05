@@ -1,23 +1,19 @@
 let app = angular.module('ticketNaut', ['ngCookies']);
 
+// app.factory('interFactory', ['$http', interFactory]);
 app.controller('FormCtrl', ['$scope', '$http', '$cookies', FormCtrl]);
-app.controller('GetIntersCtrl', ['$scope', '$http', GetInters]);
-app.controller('ActionCtrl', ['$scope', '$http', RemoveInter]);
+app.controller('IntersCtrl', ['$scope', '$http', '$cookies', IntersCtrl]);
 
 
-function ActionCtrl($scope, $http) {
-    
-}
-
-
-function GetIntersCtrl($scope, $http) {
-    $scope.inters;
-    $http.get('/inters').then((res) => {
-        $scope.inters = res.data.inters;
-    }, (err) => {
-        console.warn(err);
-    })
-}
+// function interFactory($http) {
+//     let inters = {
+//         allInters: [],
+//         get: function() {
+//             return $http.get('/inters');
+//         }
+//     };
+//     return inters;
+// }
 
 
 function FormCtrl($scope, $http, $cookies) {
@@ -52,4 +48,28 @@ function FormCtrl($scope, $http, $cookies) {
             })
         }
     }
+}
+
+
+function IntersCtrl($scope, $http, $cookies) {
+    $scope.inters = [];
+
+    $http.get('/inters').then((res) => {
+        $scope.inters = res.data.inters;
+    }, (err) => {
+        console.warn(err);
+    });
+    
+    $scope.remove = function(id) {
+        $http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
+        $http.post('/remove-inter', {pk: id}).then((res) => {
+            const index = $scope.inters.findIndex((el) => el.pk === id);
+            $scope.inters.splice(index, 0);
+            console.log(index);
+        }, (err) => {
+            console.warn(err);
+        });
+    }
+
+
 }

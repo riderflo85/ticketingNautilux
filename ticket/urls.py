@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.ListingInterventionsView.as_view(), name="home"),
     path('inters', views.GetAllInterventionsView.as_view(), name="home"),    
     path('add-inter', views.AddInterventionView.as_view(), name="add_inter"),
+    path('remove-inter', views.RemoveInterventionView.as_view(), name="remove_inter"),
 ]

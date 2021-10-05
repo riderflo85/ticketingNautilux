@@ -50,3 +50,19 @@ class AddInterventionView(View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'error': str(e)})
 
+
+class RemoveInterventionView(View):
+    """
+    Remove one intervention.
+    """
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            inter = Intervention.objects.get(
+                pk=int(data['pk'])
+            )
+            inter.delete()
+            return JsonResponse({'status': 'ok'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'error': str(e)})
