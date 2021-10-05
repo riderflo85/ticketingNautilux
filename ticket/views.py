@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.generic.base import View, TemplateView
 
 from .models import Intervention
-from .serializer import get_all_interventions_serializer
+from .serializer import get_all_interventions_serializer, serialize_inter
 
 
 class ListingInterventionsView(TemplateView):
@@ -46,7 +46,10 @@ class AddInterventionView(View):
             new_inter.create_at = datetime.now(tz=tz)
             new_inter.save()
 
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({
+                'status': 'ok',
+                'saved': serialize_inter(new_inter)
+            })
         except Exception as e:
             return JsonResponse({'status': 'error', 'error': str(e)})
 

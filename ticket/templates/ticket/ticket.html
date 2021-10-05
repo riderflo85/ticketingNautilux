@@ -26,52 +26,17 @@
             <td>{{intervention.date}}</td>
             <td>{{intervention.status}}</td>
             <td>
-                <div class="d-flex">
+                <div class="d-flex" ng-controller="IntersActionCtrl">
                     <button type="button" class="btn btn-sm btn-info"><i class="fas fa-info"></i></button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2"><i class="fas fa-pencil-alt"></i></button>
-                    <button type="button" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt" ng-click="remove(intervention.pk)"></i></button>
+                    <button type="button" class="btn btn-sm btn-primary mx-2" ng-click="update(intervention.pk)"><i class="fas fa-pencil-alt"></i></button>
+                    <button type="button" class="btn btn-sm btn-danger" ng-click="remove(intervention.pk)"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </td>
-
         </tr>
-        <!-- <tr class="table-light">
-            <th scope="row">2</th>
-            <td>Dépannage gaz</td>
-            <td>Luc</td>
-            <td>Rennes - 35000</td>
-            <td>30/09/2021</td>
-            <td>05/10/2021</td>
-            <td>Validé</td>
-            <td>
-                <div class="d-flex">
-                    <button type="button" class="btn btn-sm btn-info"><i class="fas fa-info"></i></button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2"><i class="fas fa-pencil-alt"></i></button>
-                    <button type="button" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </td>
-
-        </tr>
-        <tr class="table-light">
-            <th scope="row">1</th>
-            <td>Dépannage informatique</td>
-            <td>Jules</td>
-            <td>Rennes - 35000</td>
-            <td>30/09/2021</td>
-            <td>05/10/2021</td>
-            <td>Validé</td>
-            <td>
-                <div class="d-flex">
-                    <button type="button" class="btn btn-sm btn-info"><i class="fas fa-info"></i></button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2"><i class="fas fa-pencil-alt"></i></button>
-                    <button type="button" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </td>
-
-        </tr> -->
     </tbody>
 </table>
 {% endverbatim %}
-<!-- Modal -->
+<!-- Modal Add intervention -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" ng-controller="FormCtrl">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -109,13 +74,61 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ng-click="newInterv = {status: 'Brouillon'}">Annuler</button>
-                    <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Valider</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="form.$invalid">Valider</button>
                 </div>
                 {% endverbatim %}
             </form>
         </div>
     </div>
 </div>
+<!-- End Modal add intervention -->
+
+<!-- Modal Update intervention -->
+<div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true" ng-controller="FormCtrl">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalUpdateLabel">Mettre à jour l'intervention</h5>
+                {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
+                <span class="badge rounded-pill bg-secondary ms-2" ng-class="newInterv.status.cssStyle">{{newInterv.status.type}}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="newInterv = {status: {type: 'Brouillon', cssStyle: 'bg-secondary'}}"></button>
+                {% endverbatim %}
+            </div>
+            <form name="form" ng-submit="updateInter(form)" novalidate>
+                {% csrf_token %}
+                {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="labelData" class="form-label">Libellé</label>
+                        <input class="form-control" type="text" id="labelData" ng-model="newInterv.label" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descData" class="form-label">Description</label>
+                        <textarea class="form-control" id="descData" ng-model="newInterv.desc" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="operatorNameData" class="form-label">Nom de l'intervenant</label>
+                        <input class="form-control" type="text" id="operatorNameData" ng-model="newInterv.userInter" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="placeData" class="form-label">Lieu</label>
+                        <input class="form-control" type="text" id="placeData" ng-model="newInterv.place" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateData" class="form-label">Date prévu</label>
+                        <input class="form-control" type="date" id="dateData" ng-model="newInterv.dateInter" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ng-click="newInterv = {status: 'Brouillon'}">Annuler</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="form.$invalid">Valider</button>
+                </div>
+                {% endverbatim %}
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal update intervention -->
 {% endblock content %}
 
 
