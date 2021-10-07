@@ -1,4 +1,5 @@
 from datetime import timedelta
+from datetime import datetime
 from .models import Intervention
 
 
@@ -28,6 +29,12 @@ def get_all_interventions_serializer():
             "status": inter.status,
             "edit": inter.edit
         }
+        if datetime.now().date() > inter.date:
+            inter.status = "Terminé"
+            inter.edit = False
+            inter.save()
+            d['status'] = "Terminé"
+            d['edit'] = False
         data.append(d)
     return data
 
@@ -40,7 +47,7 @@ def serialize_inter(inter_obj):
     splited_date = inter_obj.date.isoformat().split('-')
     f_date = f"{splited_date[2]}/{splited_date[1]}/{splited_date[0]}"
 
-    s_datetime = inter_obj.create_at + timedelta(hours=2)
+    s_datetime = inter_obj.create_at
     s_datetime = s_datetime.isoformat(timespec='minutes').split('T')
     c_date = s_datetime[0].split('-')
     c_time = s_datetime[1].split('+')[0]

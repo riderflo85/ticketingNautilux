@@ -104,3 +104,24 @@ class UpdateInterventionView(View):
         except Exception as e:
             return JsonResponse(
                 {'status': 'error', 'error': str(e)}, status=400)
+
+
+class SetDoneInterventionView(View):
+    """
+    Set done intervention status.
+    """
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            pk_inter = int(data['pk'])
+            inter_inst = Intervention.objects.get(pk=pk_inter)
+            inter_inst.edit = False
+            inter_inst.status = 'Terminé'
+            inter_inst.save()
+
+            return JsonResponse({'status': 'ok'})
+        
+        except Exception as e:
+            return JsonResponse(
+                {'status': 'error', 'error': str(e)}, status=400)
