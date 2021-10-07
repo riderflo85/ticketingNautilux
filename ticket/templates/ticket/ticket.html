@@ -3,38 +3,48 @@
 
 {% block content %}
 {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
-<table class="table table-striped table-hover" ng-controller="IntersCtrl">
-    <thead>
-        <tr>
-            <th scope="col">Id de référence</th>
-            <th scope="col">Libellé</th>
-            <th scope="col">Nom intervenant</th>
-            <th scope="col">Lieu</th>
-            <th scope="col">Intervention créée le</th>
-            <th scope="col">Intervention prévue le</th>
-            <th scope="col">Statu</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody ng-repeat="intervention in inters">
-        <tr class="table-light">
-            <th scope="row">{{intervention.pk}}</th>
-            <td>{{intervention.label}}</td>
-            <td>{{intervention.agent_name}}</td>
-            <td>{{intervention.city}}</td>
-            <td>{{intervention.create_at}}</td>
-            <td>{{intervention.date}}</td>
-            <td>{{intervention.status}}</td>
-            <td>
-                <div class="d-flex" ng-controller="IntersActionCtrl">
-                    <button type="button" class="btn btn-sm btn-info"><i class="fas fa-info"></i></button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2" ng-click="update(intervention.pk)"><i class="fas fa-pencil-alt"></i></button>
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="remove(intervention.pk)"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div ng-controller="IntersCtrl">
+    <div class="filter-bloc">
+        <label for="orderBy" class="me-2">Filtrer les interventions</label>
+        <select name="order-by-date" id="orderBy" ng-model="intersOrderBy" ng-init="intersOrderBy=pk">
+            <option value="" selected>Par Id de référence</option>
+            <option value="date">Par date de la plus récente à la plus ancienne</option>
+            <option value="-date">Par date de la plus ancienne à la plus récente</option>
+        </select>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id de référence</th>
+                <th scope="col">Libellé</th>
+                <th scope="col">Nom intervenant</th>
+                <th scope="col">Lieu</th>
+                <th scope="col">Intervention créée le</th>
+                <th scope="col">Intervention prévue le</th>
+                <th scope="col">Statu</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="intervention in inters | orderBy:intersOrderBy">
+            <tr class="table-light">
+                <th scope="row">{{intervention.pk}}</th>
+                <td>{{intervention.label}}</td>
+                <td>{{intervention.agent_name}}</td>
+                <td>{{intervention.city}}</td>
+                <td>{{intervention.create_at}}</td>
+                <td>{{intervention.date | date:'dd/MM/yyyy'}}</td>
+                <td>{{intervention.status}}</td>
+                <td>
+                    <div class="d-flex" ng-controller="IntersActionCtrl">
+                        <button type="button" class="btn btn-sm btn-info"><i class="fas fa-info"></i></button>
+                        <button type="button" class="btn btn-sm btn-primary mx-2" ng-click="update(intervention.pk)"><i class="fas fa-pencil-alt"></i></button>
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="remove(intervention.pk)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 {% endverbatim %}
 <!-- Modal Add intervention -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" ng-controller="FormCtrl">
@@ -90,8 +100,8 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="modalUpdateLabel">Mettre à jour l'intervention</h5>
                 {% verbatim %} <!-- Empêche le moteur de gabarits d’effectuer le rendu du contenu de cette balise de bloc.  -->
-                <span class="badge rounded-pill bg-secondary ms-2" ng-class="newInterv.status.cssStyle">{{newInterv.status.type}}</span>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="newInterv = {status: {type: 'Brouillon', cssStyle: 'bg-secondary'}}"></button>
+                <span class="badge rounded-pill bg-secondary ms-2" ng-class="interForUpdateData.status.cssStyle">{{interForUpdateData.status.type}}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="interForUpdateData.status = {type: 'Validé', cssStyle: 'bg-success'}"></button>
                 {% endverbatim %}
             </div>
             <form name="form" ng-submit="updateInter(form)" novalidate>
@@ -100,27 +110,27 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="labelData" class="form-label">Libellé</label>
-                        <input class="form-control" type="text" id="labelData" ng-model="newInterv.label" required>
+                        <input class="form-control" type="text" id="labelData" ng-model="interForUpdateData.data.label" required>
                     </div>
                     <div class="mb-3">
                         <label for="descData" class="form-label">Description</label>
-                        <textarea class="form-control" id="descData" ng-model="newInterv.desc" required></textarea>
+                        <textarea class="form-control" id="descData" ng-model="interForUpdateData.data.description" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="operatorNameData" class="form-label">Nom de l'intervenant</label>
-                        <input class="form-control" type="text" id="operatorNameData" ng-model="newInterv.userInter" required>
+                        <input class="form-control" type="text" id="operatorNameData" ng-model="interForUpdateData.data.agent_name" required>
                     </div>
                     <div class="mb-3">
                         <label for="placeData" class="form-label">Lieu</label>
-                        <input class="form-control" type="text" id="placeData" ng-model="newInterv.place" required>
+                        <input class="form-control" type="text" id="placeData" ng-model="interForUpdateData.data.city" required>
                     </div>
                     <div class="mb-3">
                         <label for="dateData" class="form-label">Date prévu</label>
-                        <input class="form-control" type="date" id="dateData" ng-model="newInterv.dateInter" required>
+                        <input class="form-control" type="date" id="dateData" ng-model="interForUpdateData.data.date" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ng-click="newInterv = {status: 'Brouillon'}">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ng-click="interForUpdateData.status = {type: 'Validé', cssStyle: 'bg-success'}">Annuler</button>
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="form.$invalid">Valider</button>
                 </div>
                 {% endverbatim %}

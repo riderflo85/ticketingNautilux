@@ -51,7 +51,8 @@ class AddInterventionView(View):
                 'saved': serialize_inter(new_inter)
             })
         except Exception as e:
-            return JsonResponse({'status': 'error', 'error': str(e)})
+            return JsonResponse(
+                {'status': 'error', 'error': str(e)}, status=400)
 
 
 class RemoveInterventionView(View):
@@ -68,4 +69,38 @@ class RemoveInterventionView(View):
             inter.delete()
             return JsonResponse({'status': 'ok'})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'error': str(e)})
+            return JsonResponse(
+                {'status': 'error', 'error': str(e)}, status=400)
+
+
+class UpdateInterventionView(View):
+    """
+    Update one intervention data.
+    """
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            tz = timezone(data['tz'])
+            splited_date_inter = data['dateString'].split('/')
+            inter = Intervention.objects.get(
+                pk=int(data['pk'])
+            )
+            inter.label = data['label']
+            inter.description = data['description']
+            inter.agent_name = data['agent_name']
+            inter.city = data['city']
+            inter.status = data['status']
+            inter.date = datetime(
+                year=int(splited_date_inter[0]),
+                month=int(splited_date_inter[1]),
+                day=int(splited_date_inter[2]),
+                tzinfo=tz
+            ).date()
+            inter.save()
+
+            return JsonResponse({'status': 'ok'})
+
+        except Exception as e:
+            return JsonResponse(
+                {'status': 'error', 'error': str(e)}, status=400)
