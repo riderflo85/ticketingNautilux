@@ -1,5 +1,4 @@
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 from .models import Intervention
 
 
